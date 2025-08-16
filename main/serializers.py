@@ -32,7 +32,7 @@ class ServiceListSerializer(serializers.ModelSerializer):
     """Serializer for Service model excluding details field"""
     class Meta:
         model = Service
-        exclude = ('details',)
+        exclude = ('details', 'details_ar')
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -80,13 +80,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 class ServiceRequestSerializer(serializers.ModelSerializer):
+    services = serializers.PrimaryKeyRelatedField(
+        queryset=Service.objects.all(), many=True)
     service_titles = serializers.SerializerMethodField()
     user_name = serializers.CharField(source='user.full_name', read_only=True)
 
     class Meta:
         model = ServiceRequest
         fields = ['id', 'service_titles', 'user_name', 'phone_number', 'address', 'service_day', 'created_at', 'services']
-        read_only_fields = ['service_titles', 'user_name']
+        read_only_fields = ['service_titles', 'user_name', 'created_at']
 
     def get_service_titles(self, obj):
         language = self.context.get('language', 'en')

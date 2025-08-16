@@ -31,7 +31,7 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     full_name = models.CharField(max_length=255, unique=True)
-    phone_number = models.CharField(max_length=17)
+    phone_number = models.CharField(max_length=17, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
