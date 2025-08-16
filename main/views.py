@@ -125,7 +125,9 @@ def register_user(request):
             "status": True,
             "message": "User registered",
             "data": {
-                "user": s.data,
+                "id": s.data.id,
+                "full_name": s.data.full_name,
+                "phone_number": s.data.phone_number,
                 "token": token.key
             }
         }, status=status.HTTP_201_CREATED)
@@ -161,10 +163,6 @@ def token_login(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def token_logout(request):
-    """
-    Deletes the current user's token so it stops working.
-    Client must then login again to get a new token.
-    """
     Token.objects.filter(user=request.user).delete()
     return Response({"status": True, "message": "Logged out", "data": None})
 
