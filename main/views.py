@@ -139,25 +139,46 @@ def register_user(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def token_login(request):
-    """
-    Login by full_name + password (password = phone_number in your current logic).
-    Returns a fresh token (old one is deleted).
-    """
+    
     full_name = request.data.get('full_name')
-    password = request.data.get('password')
-    if not full_name or not password:
-        return Response({"status": False, "message": "full_name and password are required", "data": None},
-                        status=status.HTTP_400_BAD_REQUEST)
+    phone_number = request.data.get('phone_number')
 
-    user = authenticate(request, full_name=full_name, password=password)
-    if not user:
-        return Response({"status": False, "message": "Invalid credentials", "data": None},
-                        status=status.HTTP_401_UNAUTHORIZED)
+    if not full_name or not phone_number:
+        return Response(
+            {"status": False, "message": "full_name and phone_number are required", "data": None},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
+    try:
+        user = User.objects.get(full_name=full_name, phone_number=phone_number)
+    except User.DoesNotExist:
+        return Response(
+            {"status": False, "message": "Invalid credentials", "data": None},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
+
+    # Verify our convention: password must equal phone_number
+    if not user.check_password(phone_number):
+        return Response(
+            {"status": False, "message": "Invalid credentials", "data": None},
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
+
+    # rotate token
     Token.objects.filter(user=user).delete()
     token = Token.objects.create(user=user)
 
-    return Response({"status": True, "message": "Login successful", "data": {"token": token.key}})
+    return Response({
+        "status": True,
+        "message": "Login successful",
+        "data": {
+            "id": user.id,
+            "full_name": user.full_name,
+            "phone_number": user.phone_number,
+            "token": token.key
+        }
+    }, status=status.HTTP_200_OK)
+
 
 
 @api_view(['POST'])
