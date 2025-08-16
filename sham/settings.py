@@ -80,13 +80,15 @@ WSGI_APPLICATION = 'sham.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sham_db',
-        'USER': 'root',
-        'PASSWORD': 'password123',
-        'HOST': 'localhost',
+        'NAME': 'ShamSy$default',
+        'USER': 'ShamSy',
+        'PASSWORD': 'M@l@z$hukr!2002#',
+        'HOST': 'ShamSy.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
 }
