@@ -125,9 +125,9 @@ def register_user(request):
             "status": True,
             "message": "User registered",
             "data": {
-                "id": s.data.id,
-                "full_name": s.data.full_name,
-                "phone_number": s.data.phone_number,
+                "id": s.data["id"],
+                "full_name": s.data["full_name"],
+                "phone_number": s.data["phone_number"],
                 "token": token.key
             }
         }, status=status.HTTP_201_CREATED)
