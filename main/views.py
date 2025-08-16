@@ -40,7 +40,7 @@ def service_detail(request, service_id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])                 # <-- add this
+@permission_classes([IsAuthenticated])                
 def list_service_requests(request):
     qs = ServiceRequest.objects.filter(user=request.user)
     if not qs.exists():
@@ -105,11 +105,10 @@ def token_logout(request):
 def create_service_request(request):
     ser = ServiceRequestSerializer(
         data=request.data,
-        # 'request' is optional unless you use it in serializer
         context={'request': request, 'language': get_language(request)}
     )
     ser.is_valid(raise_exception=True)
-    obj = ser.save(user=request.user)     # <-- pass user here
+    obj = ser.save(user=request.user)    
     return Response({
         "status": True,
         "message": "Created",
