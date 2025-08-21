@@ -74,7 +74,7 @@ class ServiceRequest(models.Model):
     address = models.TextField()
     service_day = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    details = models.TextField(null=True)
+    details = models.TextField(null=True, blank=True)
 
 
     def __str__(self):
