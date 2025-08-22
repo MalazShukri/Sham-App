@@ -9,6 +9,7 @@ from .serializers import (
     ServiceDetailSerializer, ServiceListSerializer,
     UserRegistrationSerializer, ServiceRequestSerializer
 )
+from django.db import IntegrityError
 
 
 def get_language(request):
@@ -55,7 +56,15 @@ def list_service_requests(request):
 def register_user(request):
     s = UserRegistrationSerializer(data=request.data)
     s.is_valid(raise_exception=True)
-    user = s.save()
+    try:
+        user = s.save()
+
+    except IntegrityError:
+        return Response({
+            "status": False,
+            "message": "This full_name already exists",
+            "data": None
+        }, status=400)
     Token.objects.filter(user=user).delete()
     token = Token.objects.create(user=user)
     return Response({

@@ -71,7 +71,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
-        # Create user with provided data
         user = User.objects.create_user(
             full_name=validated_data['full_name'],
             phone_number=validated_data['phone_number'],
