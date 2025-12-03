@@ -48,6 +48,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'sham.urls'
 
+
+# Telegram notification config
+TELEGRAM_BOT_TOKEN = "8597712664:AAELthgChiWiKlfKlGoXomGwPdHZLlGvxeM"
+TELEGRAM_CHAT_ID = "1741086368"
+
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

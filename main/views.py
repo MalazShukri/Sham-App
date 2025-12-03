@@ -10,6 +10,7 @@ from .serializers import (
     UserRegistrationSerializer, ServiceRequestSerializer
 )
 from django.db import IntegrityError
+from .notifications import send_new_service_request_notification
 
 
 def get_language(request):
@@ -65,6 +66,7 @@ def register_user(request):
             "message": "This full_name already exists",
             "data": None
         }, status=400)
+        
     Token.objects.filter(user=user).delete()
     token = Token.objects.create(user=user)
     return Response({
@@ -117,7 +119,16 @@ def create_service_request(request):
         context={'request': request, 'language': get_language(request)}
     )
     ser.is_valid(raise_exception=True)
-    obj = ser.save(user=request.user)    
+    obj = ser.save(user=request.user)
+
+    # 🔔 Send Telegram notification (non-blocking if it fails)
+    try:
+        send_new_service_request_notification(obj)
+    except Exception as e:
+        # Don't break the API for notification failures
+        print(
+            f"[Notification] Error while sending service request notification: {e}")
+
     return Response({
         "status": True,
         "message": "Created",
