@@ -50,8 +50,9 @@ ROOT_URLCONF = 'sham.urls'
 
 
 # Telegram notification config
-TELEGRAM_BOT_TOKEN = config("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = config("TELEGRAM_CHAT_ID")
+TELEGRAM_BOT_TOKEN = config("TELEGRAM_BOT_TOKEN", default="")
+TELEGRAM_CHAT_ID = config("TELEGRAM_CHAT_ID", default="")
+
 
 
 
